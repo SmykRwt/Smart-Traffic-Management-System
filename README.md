@@ -1,10 +1,5 @@
 # Smart Traffic Management System
 
-[![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)](https://www.python.org/)
-[![Framework](https://img.shields.io/badge/framework-Streamlit-FF4B4B)](https://streamlit.io/)
-[![Database](https://img.shields.io/badge/database-PostgreSQL-336791)](https://www.postgresql.org/)
-[![Model](https://img.shields.io/badge/yolo-v11n-green)](https://github.com/ultralytics/ultralytics)
-
 An AI-powered computer vision platform designed for intelligent traffic monitoring, emergency vehicle detection, and real-time traffic flow analytics. It converts generic CCTV cameras into proactive **AI Vision Agents** that understand road states, track vehicle journeys, detect stationary obstructions, and log telemetry database entries to enable smart traffic signaling.
 
 ---
@@ -14,7 +9,6 @@ An AI-powered computer vision platform designed for intelligent traffic monitori
 * **Dual YOLO Inference Engine**: Employs a general YOLOv11 model for traffic analytics and a custom-trained emergency model for ambulance, firetruck, and police car detection.
 * **Overlapping Duplicate Suppression**: Uses custom Intersection over Union (IoU) algorithms to eliminate duplicate bounding boxes when both models detect the same emergency vehicle.
 * **Tracking ID Inheritance**: Maps tracking IDs from the general tracking model onto custom emergency detections via IoU matching, allowing emergency vehicles to be tracked seamlessly.
-* **Video-Clock Time Sync**: Synchronizes Stopped Vehicle Timers with the video's frame rate rather than host system time, preventing errors during fast or slow processing.
 * **Rule & Event System**: Evaluates live telemetry data to generate structured warnings (e.g. *Heavy Traffic*, *Emergency Vehicle*, *Stopped Vehicle*) with different severity levels (`HIGH`, `MEDIUM`, `INFO`).
 * **PostgreSQL Integration**: Automatically archives real-time traffic statistics and telemetry for historical analysis.
 * **Premium Web Dashboard**: A dark-themed Streamlit interface featuring a live-streaming video feed, metrics grids, live vehicle distribution bar charts, and database-driven historical trend line charts.
