@@ -138,11 +138,16 @@ with col_right:
     # Grid of metrics
     m_col1, m_col2 = st.columns(2)
     with m_col1:
-        st.markdown('<div class="metric-card"><div class="metric-label">Current Count</div><div id="metric-current" class="metric-val">0</div></div>', unsafe_allow_html=True)
-        st.markdown('<div class="metric-card" style="margin-top: 15px;"><div class="metric-label">Density</div><div id="metric-density" class="metric-val" style="color: #00ff00;">N/A</div></div>', unsafe_allow_html=True)
+        card_current = st.empty()
+        card_density = st.empty()
     with m_col2:
-        st.markdown('<div class="metric-card"><div class="metric-label">Unique Count</div><div id="metric-unique" class="metric-val">0</div></div>', unsafe_allow_html=True)
-        st.markdown('<div class="metric-card" style="margin-top: 15px;"><div class="metric-label">Congestion</div><div id="metric-congestion" class="metric-val" style="color: #00ff00;">N/A</div></div>', unsafe_allow_html=True)
+        card_unique = st.empty()
+        card_congestion = st.empty()
+        
+    card_current.markdown('<div class="metric-card"><div class="metric-label">Current Count</div><div class="metric-val">0</div></div>', unsafe_allow_html=True)
+    card_density.markdown('<div class="metric-card" style="margin-top: 15px;"><div class="metric-label">Density</div><div class="metric-val" style="color: #00ff00;">N/A</div></div>', unsafe_allow_html=True)
+    card_unique.markdown('<div class="metric-card"><div class="metric-label">Unique Count</div><div class="metric-val">0</div></div>', unsafe_allow_html=True)
+    card_congestion.markdown('<div class="metric-card" style="margin-top: 15px;"><div class="metric-label">Congestion</div><div class="metric-val" style="color: #00ff00;">N/A</div></div>', unsafe_allow_html=True)
         
     st.markdown("<br>", unsafe_allow_html=True)
     
@@ -199,15 +204,25 @@ if run:
             analytics = summary["analytics"]
             events = summary["events"] # strings
             
+            # Format Density & Congestion colors
+            density_color = "#00ff00" if analytics.traffic_density == "LOW" else ("#ffaa00" if analytics.traffic_density == "MEDIUM" else "#ff4b4b")
+            congestion_color = "#00ff00" if analytics.congestion_level in ["FREE FLOW", "MODERATE"] else ("#ffaa00" if analytics.congestion_level == "HEAVY" else "#ff4b4b")
+            
             # Update metrics cards
+            card_current.markdown(f'<div class="metric-card"><div class="metric-label">Current Count</div><div class="metric-val">{analytics.current_vehicle_count}</div></div>', unsafe_allow_html=True)
+            card_density.markdown(f'<div class="metric-card" style="margin-top: 15px;"><div class="metric-label">Density</div><div class="metric-val" style="color: {density_color};">{analytics.traffic_density}</div></div>', unsafe_allow_html=True)
+            card_unique.markdown(f'<div class="metric-card"><div class="metric-label">Unique Count</div><div class="metric-val">{analytics.unique_vehicle_count}</div></div>', unsafe_allow_html=True)
+            card_congestion.markdown(f'<div class="metric-card" style="margin-top: 15px;"><div class="metric-label">Congestion</div><div class="metric-val" style="color: {congestion_color};">{analytics.congestion_level}</div></div>', unsafe_allow_html=True)
+
+            # Update metrics table
             telemetry_placeholder.markdown(f"""
             <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
                 <table style="width:100%; font-size:1.1rem; border-collapse: collapse;">
                     <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);"><td style="padding:8px 0; color:#a0aec0;">FPS</td><td style="text-align:right; font-weight:bold; color:#4facfe;">{analytics.fps}</td></tr>
                     <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);"><td style="padding:8px 0; color:#a0aec0;">Current Vehicles</td><td style="text-align:right; font-weight:bold; color:#ffaa00;">{analytics.current_vehicle_count}</td></tr>
                     <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);"><td style="padding:8px 0; color:#a0aec0;">Unique Vehicles</td><td style="text-align:right; font-weight:bold; color:#ffaa00;">{analytics.unique_vehicle_count}</td></tr>
-                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);"><td style="padding:8px 0; color:#a0aec0;">Traffic Density</td><td style="text-align:right; font-weight:bold; color:#00ff00;">{analytics.traffic_density}</td></tr>
-                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);"><td style="padding:8px 0; color:#a0aec0;">Congestion Level</td><td style="text-align:right; font-weight:bold; color:#00ff00;">{analytics.congestion_level}</td></tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);"><td style="padding:8px 0; color:#a0aec0;">Traffic Density</td><td style="text-align:right; font-weight:bold; color:{density_color};">{analytics.traffic_density}</td></tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);"><td style="padding:8px 0; color:#a0aec0;">Congestion Level</td><td style="text-align:right; font-weight:bold; color:{congestion_color};">{analytics.congestion_level}</td></tr>
                     <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);"><td style="padding:8px 0; color:#a0aec0;">Stopped Vehicle IDs</td><td style="text-align:right; font-weight:bold; color:#ff4b4b;">{len(analytics.stopped_vehicle_ids)}</td></tr>
                     <tr><td style="padding:8px 0; color:#a0aec0;">Emergency Vehicles</td><td style="text-align:right; font-weight:bold; color:#ff4b4b;">{len(analytics.emergency_vehicles)}</td></tr>
                 </table>
@@ -277,6 +292,12 @@ if run:
                 density_color = "#00ff00" if analytics.traffic_density == "LOW" else ("#ffaa00" if analytics.traffic_density == "MEDIUM" else "#ff4b4b")
                 congestion_color = "#00ff00" if analytics.congestion_level in ["FREE FLOW", "MODERATE"] else ("#ffaa00" if analytics.congestion_level == "HEAVY" else "#ff4b4b")
                 
+                # Update metrics cards
+                card_current.markdown(f'<div class="metric-card"><div class="metric-label">Current Count</div><div class="metric-val">{analytics.current_vehicle_count}</div></div>', unsafe_allow_html=True)
+                card_density.markdown(f'<div class="metric-card" style="margin-top: 15px;"><div class="metric-label">Density</div><div class="metric-val" style="color: {density_color};">{analytics.traffic_density}</div></div>', unsafe_allow_html=True)
+                card_unique.markdown(f'<div class="metric-card"><div class="metric-label">Unique Count</div><div class="metric-val">{analytics.unique_vehicle_count}</div></div>', unsafe_allow_html=True)
+                card_congestion.markdown(f'<div class="metric-card" style="margin-top: 15px;"><div class="metric-label">Congestion</div><div class="metric-val" style="color: {congestion_color};">{analytics.congestion_level}</div></div>', unsafe_allow_html=True)
+
                 # Render metrics table dynamically
                 telemetry_placeholder.markdown(f"""
                 <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
