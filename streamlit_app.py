@@ -253,6 +253,15 @@ if run:
                 
             progress_bar.progress(100)
             st.sidebar.success("Image processed successfully!")
+            if os.path.exists(output_path):
+                with open(output_path, "rb") as f:
+                    st.sidebar.download_button(
+                        label="📥 Download Processed Image",
+                        data=f,
+                        file_name="processed_" + os.path.basename(file_path),
+                        mime="image/jpeg",
+                        use_container_width=True
+                    )
             
         else:
             # Video Processing with Live Streaming Feed
@@ -317,6 +326,15 @@ if run:
                 
             progress_bar.progress(100)
             st.sidebar.success("Video processed and streamed successfully!")
+            if os.path.exists(output_path):
+                with open(output_path, "rb") as f:
+                    st.sidebar.download_button(
+                        label="📥 Download Processed Video",
+                        data=f,
+                        file_name=os.path.basename(output_path),
+                        mime="video/mp4",
+                        use_container_width=True
+                    )
             
     # Clean up local temporary file
     os.remove(file_path)
