@@ -29,12 +29,12 @@ def main():
     if extension in IMAGE_EXTENSIONS:
 
         processor = ImageProcessor()
-        output_path, summary = processor.process_image(path)
+        _, summary = processor.process_image(path)
 
     elif extension in VIDEO_EXTENSIONS:
 
         processor = VideoProcessor()
-        output_path, summary = processor.process_video(path)
+        _, summary = processor.process_video(path)
 
     else:
 
@@ -42,7 +42,7 @@ def main():
 
         return
 
-    print(f"\nProcessing complete! Output saved to: {output_path}")
+    print("\nProcessing complete!")
     print("\nSummary Statistics:")
     print(f"Total Detections: {summary['detections']}")
     print(f"Traffic Density: {summary['analytics'].traffic_density}")

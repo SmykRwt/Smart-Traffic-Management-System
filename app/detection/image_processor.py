@@ -96,15 +96,6 @@ class ImageProcessor:
             detections,
         )
 
-        os.makedirs("outputs", exist_ok=True)
-
-        output_path = "outputs/result.jpg"
-
-        cv2.imwrite(
-            output_path,
-            output,
-        )
-
         summary = {
 
             "analytics": analytics,
@@ -115,4 +106,4 @@ class ImageProcessor:
 
         }
 
-        return output_path, summary
+        return output, summary

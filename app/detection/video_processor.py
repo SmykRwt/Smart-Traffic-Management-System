@@ -54,18 +54,6 @@ class VideoProcessor:
         if fps <= 0:
             fps = 30.0
 
-        os.makedirs("outputs", exist_ok=True)
-
-        base_name = os.path.basename(video_path)
-        output_path = os.path.join("outputs", f"processed_{base_name}")
-
-        writer = cv2.VideoWriter(
-            output_path,
-            cv2.VideoWriter_fourcc(*"mp4v"),
-            fps,
-            (width, height),
-        )
-
         frame_index = 0
 
         try:
@@ -113,24 +101,20 @@ class VideoProcessor:
                     events,
                 )
 
-                writer.write(annotated_frame)
                 frame_index += 1
 
-                yield annotated_frame, analytics, events, detections, output_path
+                yield annotated_frame, analytics, events, detections, None
 
         finally:
             cap.release()
-            writer.release()
             logger.info("Video processing completed.")
 
     def process_video(self, video_path, conf=None):
         latest_summary = {}
-        output_path = None
-        for frame, analytics, events, detections, out_path in self.process_video_stream(video_path, conf=conf):
-            output_path = out_path
+        for frame, analytics, events, detections, _ in self.process_video_stream(video_path, conf=conf):
             latest_summary = {
                 "analytics": analytics,
                 "events": [str(event) for event in events],
                 "detections": len(detections),
             }
-        return output_path, latest_summary
+        return None, latest_summary
