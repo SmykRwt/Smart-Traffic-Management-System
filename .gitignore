@@ -1,9 +1,36 @@
-.venv/
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
+*.pyd
 
-runs/
-data/outputs/
+# Virtual Environment
+.venv/
+venv/
+env/
 
+# IDE
 .vscode/
 .idea/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Outputs
+outputs/
+*.mp4
+*.avi
+
+# Logs
+*.log
+
+# Database
+*.db
+*.sqlite3
+
+# Models (optional - see below)
+# models/*.pt
+
+# OS
+.DS_Store
+Thumbs.db

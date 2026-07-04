@@ -22,7 +22,9 @@ MODEL_DIR = PROJECT_ROOT / "models"
 # Model Configuration
 # ===========================
 
-MODEL_NAME = "yolo11n.pt"
+MODEL_NAME = "models/yolo11n.pt"
+GENERAL_MODEL = "models/yolo11n.pt"
+EMERGENCY_MODEL = "models/emergency_vehicle.pt"
 
 CONFIDENCE_THRESHOLD = 0.30
 
@@ -35,7 +37,7 @@ IOU_THRESHOLD = 0.50
 
 VIDEO_PATH = VIDEO_DIR / "traffic_2min.mp4"
 
-WINDOW_NAME = "AI Vision Intelligence Platform"
+WINDOW_NAME = "Smart Traffic Management System"
 
 FRAME_WIDTH = 1280
 FRAME_HEIGHT = 720
@@ -62,3 +64,21 @@ VEHICLE_CLASSES = {
     "motorcycle",
     "bicycle"
 }
+# Emergency Vehicle Classes
+
+EMERGENCY_CLASSES = {
+
+    "ambulance",
+
+    "fire_truck",
+
+    "police_car",
+
+}
+# -----------------------------------------
+# Stopped Vehicle Detection
+# -----------------------------------------
+
+STOPPED_TIME_THRESHOLD = 6.0      # seconds
+
+STOPPED_DISTANCE_THRESHOLD = 10.0 # pixels

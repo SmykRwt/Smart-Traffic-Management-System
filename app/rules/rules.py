@@ -25,5 +25,35 @@ RULES = [
         condition=lambda analytics:
             analytics.current_vehicle_count == 0,
     ),
+    Rule(
+
+        name="Stopped Vehicle",
+
+        severity="MEDIUM",
+
+        description="A vehicle has remained stationary for an extended period.",
+
+        condition=lambda analytics:
+
+            len(
+                analytics.stopped_vehicle_ids
+            ) > 0,
+
+    ),
+    Rule(
+
+        name="Emergency Vehicle",
+
+        severity="HIGH",
+
+        description="Emergency vehicle detected.",
+
+        condition=lambda analytics:
+
+            len(
+                analytics.emergency_vehicles
+            ) > 0,
+
+    ),
 
 ]

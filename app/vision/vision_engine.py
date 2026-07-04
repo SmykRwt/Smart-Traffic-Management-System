@@ -1,22 +1,8 @@
-"""
-Vision Engine
-
-Central AI service of the platform.
-
-Responsibilities:
-1. Load the AI model once.
-2. Perform object detection.
-3. Perform multi-object tracking.
-4. Expose a clean interface to the application.
-
-This module is the only one that directly interacts
-with Ultralytics YOLO.
-"""
-
 from ultralytics import YOLO
 
 from app.core.config import (
-    MODEL_NAME,
+    GENERAL_MODEL,
+    EMERGENCY_MODEL,
     CONFIDENCE_THRESHOLD,
     IOU_THRESHOLD,
 )
@@ -30,33 +16,63 @@ class VisionEngine:
 
         logger.info("Loading Vision Engine...")
 
-        self.model = YOLO(MODEL_NAME)
+        logger.info("Loading General Detection Model...")
+        self.general_model = YOLO(GENERAL_MODEL)
+
+        logger.info("Loading Emergency Vehicle Model...")
+        self.emergency_model = YOLO(EMERGENCY_MODEL)
 
         logger.info("Vision Engine Ready.")
 
-    def detect(self, frame):
+    # -----------------------------
+    # General Detection
+    # -----------------------------
 
-        return self.model(
+    def detect(self, frame, conf=None):
+
+        if conf is None:
+            conf = CONFIDENCE_THRESHOLD
+
+        return self.general_model(
             frame,
-            conf=CONFIDENCE_THRESHOLD,
+            conf=conf,
             iou=IOU_THRESHOLD,
             verbose=False,
         )
 
-    def track(self, frame):
+    def track(self, frame, conf=None):
 
-        return self.model.track(
+        if conf is None:
+            conf = CONFIDENCE_THRESHOLD
+
+        return self.general_model.track(
             frame,
             persist=True,
             tracker="bytetrack.yaml",
-            conf=CONFIDENCE_THRESHOLD,
+            conf=conf,
             iou=IOU_THRESHOLD,
             verbose=False,
         )
 
-    def predict(self, frame, tracking=True):
+    def predict(self, frame, tracking=True, conf=None):
 
         if tracking:
-            return self.track(frame)
+            return self.track(frame, conf=conf)
 
-        return self.detect(frame)
+        return self.detect(frame, conf=conf)
+
+    # -----------------------------
+    # Emergency Vehicle Detection
+    # -----------------------------
+
+    def detect_emergency(self, frame, conf=None):
+
+        if conf is None:
+            conf = CONFIDENCE_THRESHOLD
+
+        return self.emergency_model(
+            frame,
+            conf=conf,
+            iou=IOU_THRESHOLD,
+            verbose=False,
+        )

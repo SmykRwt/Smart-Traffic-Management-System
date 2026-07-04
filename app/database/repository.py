@@ -29,3 +29,25 @@ class AnalyticsRepository:
         finally:
 
             session.close()
+
+    def get_history(self, limit=100):
+
+        session = SessionLocal()
+
+        try:
+
+            records = (
+                session.query(Analytics)
+                .order_by(Analytics.timestamp.desc())
+                .limit(limit)
+                .all()
+            )
+
+            # Reverse the list to have chronological order (oldest to newest) for graphing
+            records.reverse()
+
+            return records
+
+        finally:
+
+            session.close()

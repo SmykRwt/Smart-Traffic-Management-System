@@ -1,6 +1,5 @@
 import cv2
 
-
 class HUD:
 
     def draw(self, frame, analytics, events):
@@ -48,7 +47,7 @@ class HUD:
 
         cv2.putText(
             frame,
-            "AI Vision Intelligence Platform",
+            "Smart Traffic Management System",
             (x, y),
             font,
             0.7,
@@ -73,6 +72,18 @@ class HUD:
             ("Traffic Density", analytics.traffic_density),
 
             ("Congestion", analytics.congestion_level),
+            (
+                "Stopped Vehicles",
+                len(
+                    analytics.stopped_vehicle_ids
+                ),
+            ),
+            (
+                "Emergency Vehicles",
+                len(
+                    analytics.emergency_vehicles
+                ),
+            ),
 
         ]
 

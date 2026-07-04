@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from app.processors.image_processor import ImageProcessor
-from app.processors.video_processor import VideoProcessor
+from app.detection.image_processor import ImageProcessor
+from app.detection.video_processor import VideoProcessor
 
 
 IMAGE_EXTENSIONS = {
@@ -28,11 +28,13 @@ def main():
 
     if extension in IMAGE_EXTENSIONS:
 
-        processor = ImageProcessor(path)
+        processor = ImageProcessor()
+        output_path, summary = processor.process_image(path)
 
     elif extension in VIDEO_EXTENSIONS:
 
-        processor = VideoProcessor(path)
+        processor = VideoProcessor()
+        output_path, summary = processor.process_video(path)
 
     else:
 
@@ -40,7 +42,15 @@ def main():
 
         return
 
-    processor.process()
+    print(f"\nProcessing complete! Output saved to: {output_path}")
+    print("\nSummary Statistics:")
+    print(f"Total Detections: {summary['detections']}")
+    print(f"Traffic Density: {summary['analytics'].traffic_density}")
+    print(f"Congestion Level: {summary['analytics'].congestion_level}")
+    if summary['events']:
+        print("\nGenerated Events:")
+        for event in summary['events']:
+            print(f"- {event}")
 
 
 if __name__ == "__main__":

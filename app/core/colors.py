@@ -35,5 +35,11 @@ CLASS_COLORS = {
 
     "bicycle": BICYCLE_COLOR,
 
-    "person": PERSON_COLOR
+    "person": PERSON_COLOR,
+
+    "ambulance": (0, 165, 255),      # Orange/Red
+
+    "fire_truck": (0, 0, 255),       # Red
+
+    "police_car": (255, 0, 0),       # Blue
 }

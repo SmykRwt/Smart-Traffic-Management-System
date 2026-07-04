@@ -15,3 +15,7 @@ class AnalyticsResult:
     traffic_density: str
 
     congestion_level: str
+    
+    stopped_vehicle_ids: list[int]
+
+    emergency_vehicles: list
