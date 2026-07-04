@@ -1,6 +1,5 @@
 # 🚦 AI Smart Traffic Management System
 
-
 An intelligent, computer-vision powered platform for real-time traffic monitoring, congestion assessment, emergency vehicle prioritization, and database logging. 
 
 ---
@@ -9,15 +8,23 @@ An intelligent, computer-vision powered platform for real-time traffic monitorin
 
 See the AI Traffic Agent in action, tracking vehicles, detecting stopped obstructions, and alerting the control center.
 
-### 📸 Live Detection Frame
+
 ![Traffic Detection Output](data/Output/Screenshot%202026-07-04%20185917.png)
+
+<br><br><br><br>
+
+### 📸 Live Detection Frame
 ![Traffic Detection Output](data/Output/result.jpg)
 
 ---
 
 ## 🚀 Key Features
 
-* **Dual YOLO Vision Engine**: Runs a general model for standard traffic tracking alongside a specialized emergency model (trained to detect ambulances, fire trucks, and police cars).
+* **Dual YOLO Vision Engine**: Runs a general model for standard traffic tracking alongside a specialized emergency model.
+* **Emergency Vehicle Classification**: Customized model trained to identify and prioritize **3 emergency vehicle classes**:
+  * 🚑 **Ambulance**
+  * 🚒 **Fire Truck** (`fire_truck`)
+  * 🚓 **Police Car** (`police_car`)
 * **Duplicate Suppression & ID Inheritance**: Resolves overlap conflicts using custom IoU matching. Emergency vehicles inherit tracking IDs from the general engine, ensuring smooth telemetry tracing.
 * **Video-Clock Time Sync**: Stopped-vehicle timers use video frame rates instead of system wall clocks, maintaining accuracy regardless of processing speeds.
 * **Real-time Event Rules Engine**: Automatically triggers warnings (`HIGH`, `MEDIUM`, `INFO`) based on congestion, stationary vehicles, or emergency dispatch events.
@@ -71,7 +78,6 @@ Smart Traffic Management System/
 │   ├── yolo11n.pt             # General YOLO model weights
 │   └── emergency_vehicle.pt   # Custom emergency vehicle YOLO model weights
 │
-├── outputs/                   # Directory where output results and videos are saved
 ├── tests/                     # Pipeline unit tests
 ├── main.py                    # CLI app launcher
 ├── streamlit_app.py           # Web Dashboard app launcher
@@ -134,26 +140,32 @@ python main.py
 
 ---
 
-## 🧪 Testing the System
-
-Unit tests cover the rule engine, DB persistence, result parsing, and tracking ID inheritance. Run tests with:
-```powershell
-$env:PYTHONPATH="."
-python tests/test_pipeline.py
-```
-
----
-
 ## 📈 Model Performance & Validation
 
-Below are the performance charts from training the custom emergency vehicle classification model.
+Below are the performance metrics and validation charts tracked during training the custom emergency vehicle classification model.
 
-| Confusion Matrix | Precision-Recall Curve |
-| :---: | :---: |
-| ![Confusion Matrix](confusion_matrix.png) | ![Precision-Recall Curve](BoxPR_curve.png) |
+### 📊 Metric Graphs & Performance Metrics
 
-### Training Progress & Label Distribution
+#### 1. Confusion Matrix
+The confusion matrix measures classification accuracy. It compares actual labels (Ambulance, Fire Truck, Police Car, Background) against model predictions, highlighting true positives and false detection rates.
+![Confusion Matrix](confusion_matrix.png)
+
+<br>
+
+#### 2. Precision-Recall (PR) Curve
+Plots precision (exactness) vs. recall (completeness) for bounding box predictions. Higher Area Under Curve (AUC) indicates a model that is both highly accurate and generalizable.
+![Precision-Recall Curve](BoxPR_curve.png)
+
+<br>
+
+#### 3. Training & Validation Loss Curves
+Tracks Box Loss (bounding box location regression), Class Loss (classification accuracy), and DFL Loss (Distribution Focal Loss) over training epochs. Steady declines in both train and val losses indicate successful convergence.
 ![Training Results](results.png)
+
+<br>
+
+#### 4. Bounding Box & Label Distributions
+Visualizes the shape, center location coordinates, and instance count distributions of labels within the emergency vehicle training dataset.
 ![Dataset Labels](labels.jpg)
 
 ---
@@ -170,6 +182,14 @@ When standard vehicles and emergency vehicles are processed simultaneously, the 
 Instead of system clock timers, we rely on video-clock metrics to support non-real-time processing speeds:
 $$\text{Relative Time} = \frac{\text{Current Frame Index}}{\text{Video FPS}}$$
 A vehicle is flagged as `STOPPED` if its bounding box center moves less than **10 pixels** over a span of **6.0 seconds** of video time.
+
+---
+
+## 🔮 Future Improvements
+* **Active Green Light Override**: Integrate with traffic controller APIs to automatically force green lights along the calculated trajectory of oncoming emergency vehicles.
+* **Speed Estimation**: Map camera pixel coordinates to real-world coordinates using a Homography matrix to calculate vehicle velocities and trigger speeding events.
+
+---
 
 ### Author
 Samyak Rawat | AI/ML Engineer | Thapar Institute of Engineering and Technology
