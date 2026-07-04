@@ -1,23 +1,36 @@
-# Smart Traffic Management System
+# 🚦 AI Smart Traffic Management System
 
-An AI-powered computer vision platform designed for intelligent traffic monitoring, emergency vehicle detection, and real-time traffic flow analytics. It converts generic CCTV cameras into proactive **AI Vision Agents** that understand road states, track vehicle journeys, detect stationary obstructions, and log telemetry database entries to enable smart traffic signaling.
 
----
-
-## 📸 Key Features
-
-* **Dual YOLO Inference Engine**: Employs a general YOLOv11 model for traffic analytics and a custom-trained emergency model for ambulance, firetruck, and police car detection.
-* **Overlapping Duplicate Suppression**: Uses custom Intersection over Union (IoU) algorithms to eliminate duplicate bounding boxes when both models detect the same emergency vehicle.
-* **Tracking ID Inheritance**: Maps tracking IDs from the general tracking model onto custom emergency detections via IoU matching, allowing emergency vehicles to be tracked seamlessly.
-* **Rule & Event System**: Evaluates live telemetry data to generate structured warnings (e.g. *Heavy Traffic*, *Emergency Vehicle*, *Stopped Vehicle*) with different severity levels (`HIGH`, `MEDIUM`, `INFO`).
-* **PostgreSQL Integration**: Automatically archives real-time traffic statistics and telemetry for historical analysis.
-* **Premium Web Dashboard**: A dark-themed Streamlit interface featuring a live-streaming video feed, metrics grids, live vehicle distribution bar charts, and database-driven historical trend line charts.
+An intelligent, computer-vision powered platform for real-time traffic monitoring, congestion assessment, emergency vehicle prioritization, and database logging. 
 
 ---
 
-## 📐 Overall Architecture
+## 🎬 Project Showcase
 
-The platform processes image or video files through a sequential, modular pipeline:
+See the AI Traffic Agent in action, tracking vehicles, detecting stopped obstructions, and alerting the control center.
+
+### 🎥 Processed Video Demo
+<video src="outputs/processed_Traffic_30sec.mp4" width="100%" controls autoplay loop muted></video>
+
+### 📸 Live Detection Frame
+![Traffic Detection Output](outputs/result.jpg)
+
+---
+
+## 🚀 Key Features
+
+* **Dual YOLO Vision Engine**: Runs a general model for standard traffic tracking alongside a specialized emergency model (trained to detect ambulances, fire trucks, and police cars).
+* **Duplicate Suppression & ID Inheritance**: Resolves overlap conflicts using custom IoU matching. Emergency vehicles inherit tracking IDs from the general engine, ensuring smooth telemetry tracing.
+* **Video-Clock Time Sync**: Stopped-vehicle timers use video frame rates instead of system wall clocks, maintaining accuracy regardless of processing speeds.
+* **Real-time Event Rules Engine**: Automatically triggers warnings (`HIGH`, `MEDIUM`, `INFO`) based on congestion, stationary vehicles, or emergency dispatch events.
+* **PostgreSQL Integration**: Logs traffic stats and telemetry indicators periodically for historical trend forecasting.
+* **Premium Dark Dashboard**: Built with Streamlit, containing live streams, interactive controls, live distribution metrics, and trend charts.
+
+---
+
+## 📐 Pipeline Architecture
+
+The processing pipeline is modular and sequential:
 
 ```mermaid
 flowchart TD
@@ -36,70 +49,67 @@ flowchart TD
 
 ---
 
-## 📂 Project Directory Structure
+## 📂 Codebase Layout
 
 ```text
 Smart Traffic Management System/
 │
 ├── app/
 │   ├── analytics/             # Compute metrics (FPS, congestion, density, stopped vehicles)
-│   ├── core/                  # Shared configurations, BGR colors, and loggers
-│   ├── database/              # SQLAlchemy database setup, models, and repositories
-│   ├── detection/             # Image and video processing pipelines
-│   ├── events/                # Event creation and generation engine
-│   ├── models/                # Dataclasses (BoundingBox, Detection)
-│   ├── rules/                 # Rules definitions and rule evaluator engine
-│   ├── tracking/              # Custom ByteTrack tracking engine wrapper
-│   ├── utils/                 # Visual annotations, HUD overlay, and graphics
-│   └── vision/                # Vision engine and YOLO output result parsing
+│   ├── core/                  # Configurations, custom logger, colors
+│   ├── database/              # DB repository, SQLAlchemy connections, schemas
+│   ├── detection/             # Pipeline processors for files and frames
+│   ├── events/                # Alert generation engine
+│   ├── models/                # Dataclasses (Detection, BoundingBox)
+│   ├── rules/                 # Rules definitions and evaluation engine
+│   ├── tracking/              # ByteTrack engine integration
+│   ├── utils/                 # Visual annotation utilities (bounding boxes, HUD overlays)
+│   └── vision/                # YOLO integrations, parser, and duplicate suppression
 │
 ├── data/
-│   └── videos/                # Sample video assets (Traffic_30sec.mp4, etc.)
+│   └── videos/                # Sample video assets (Traffic_30sec.mp4, Traffic_2min.mp4)
 │
 ├── models/
 │   ├── yolo11n.pt             # General YOLO model weights
 │   └── emergency_vehicle.pt   # Custom emergency vehicle YOLO model weights
 │
-├── outputs/                   # Processed video and image outputs
-├── tests/                     # Unit test suite
-├── main.py                    # Command-line interface entry point
-├── streamlit_app.py           # Premium Streamlit web dashboard
+├── outputs/                   # Directory where output results and videos are saved
+├── tests/                     # Pipeline unit tests
+├── main.py                    # CLI app launcher
+├── streamlit_app.py           # Web Dashboard app launcher
 ├── requirements.txt           # Python dependencies list
-└── README.md                  # Project documentation
+└── README.md                  # System documentation
 ```
 
 ---
 
-## 🛠️ Setup & Installation
+## ⚙️ Setup & Installation
 
 ### 1. Prerequisites
 * **Python 3.10+**
-* **PostgreSQL** (running locally or remotely)
+* **PostgreSQL** Database running locally/remotely.
 
 ### 2. Configure Virtual Environment & Dependencies
-Clone the repository, initialize a virtual environment, and install the required dependencies:
-
 ```powershell
-# Create virtual environment
+# Create & Activate Virtual Environment
 python -m venv .venv
+.venv\Scripts\Activate.ps1   # Windows (PowerShell)
+source .venv/bin/activate     # macOS/Linux
 
-# Activate virtual environment
-# Windows (PowerShell)
-.venv\Scripts\Activate.ps1
-# Linux/macOS
-source .venv/bin/activate
-
-# Install dependencies
+# Install all requirements
 pip install -r requirements.txt
 ```
 
-### 3. Setup Database
-Ensure your PostgreSQL server is running. Update the connection URL in `app/database/database.py` if necessary:
-```python
-DATABASE_URL = "postgresql://postgres:YOUR_PASSWORD@localhost:5432/YOUR_DB_NAME"
-```
+### 3. Setup PostgreSQL Database
+Ensure your PostgreSQL instance is running. Create a database named `ai_vision`. 
 
-Initialize the database schema (creates the `analytics` table):
+The configuration URL in [app/database/database.py](file:///c:/Users/rawat/Desktop/My%20Projects/Smart%20Traffic%20Management%20System/app/database/database.py) defaults to:
+```python
+DATABASE_URL = "postgresql://postgres:12345@localhost:5433/ai_vision"
+```
+Adjust this string if your port, username, or password differs.
+
+Initialize the table schemas using:
 ```powershell
 $env:PYTHONPATH="."
 python -m app.database.init_db
@@ -107,30 +117,28 @@ python -m app.database.init_db
 
 ---
 
-## 🚀 Running the Application
+## 🏃 Running the Application
 
-### 1. Web Dashboard (Streamlit)
-Launch the premium, real-time live-streaming dashboard:
+### 1. Streamlit Web Dashboard
+Launch the interactive dashboard to upload media, adjust detection confidence thresholds, and see live results:
 ```powershell
 streamlit run streamlit_app.py
 ```
-Open [http://localhost:8501](http://localhost:8501) in your browser. Upload an image or video, adjust the confidence slider to refine detections, and click **Launch Vision Agent**.
+Open the application at `http://localhost:8501`.
 
 ### 2. Command Line Interface (CLI)
-To run a batch video or image file through the terminal:
+For quick local processing of images/videos:
 ```powershell
 $env:PYTHONPATH="."
 python main.py
 ```
-*Enter the file path (e.g. `data/videos/Traffic_30sec.mp4`) when prompted.*
+*Enter the target file path when prompted (e.g. `data/videos/Traffic_30sec.mp4`).*
 
 ---
 
-## 🧪 Running Unit Tests
+## 🧪 Testing the System
 
-The project includes unit tests covering Result Parsing (inheritance checks), Stopped Vehicle detection (video clock timing), the Rule Engine, and PostgreSQL database queries.
-
-To run the test suite:
+Unit tests cover the rule engine, DB persistence, result parsing, and tracking ID inheritance. Run tests with:
 ```powershell
 $env:PYTHONPATH="."
 python tests/test_pipeline.py
@@ -138,15 +146,32 @@ python tests/test_pipeline.py
 
 ---
 
-## 💡 Core Algorithms Explained
+## 📈 Model Performance & Validation
+
+Below are the performance charts from training the custom emergency vehicle classification model.
+
+| Confusion Matrix | Precision-Recall Curve |
+| :---: | :---: |
+| ![Confusion Matrix](confusion_matrix.png) | ![Precision-Recall Curve](BoxPR_curve.png) |
+
+### Training Progress & Label Distribution
+![Training Results](results.png)
+![Dataset Labels](labels.jpg)
+
+---
+
+## 💡 Algorithmic Highlights
 
 ### IoU-based Duplicate Removal & ID Inheritance
-Since two YOLO models run simultaneously (General + Emergency), a single vehicle (e.g. an ambulance) is often detected twice (once as a `truck`/`car` by the general model, and once as an `ambulance` by the emergency model).
-* The **Duplicate Removal** module calculates the Intersection over Union (IoU) of overlapping bounding boxes.
-* If the IoU exceeds `0.50`, the general detection is discarded in favor of the emergency detection.
-* Because the general model utilizes ByteTrack tracking and has a tracking ID, the emergency detection inherits this tracking ID before the general detection is deleted.
+When standard vehicles and emergency vehicles are processed simultaneously, the same emergency vehicle can be double-detected. 
+1. We compute **Intersection over Union (IoU)** for overlapping bounding boxes.
+2. If `IoU > 0.50` between a general detection (e.g., `car`/`truck`) and an emergency vehicle detection (e.g., `ambulance`), the general detection is discarded.
+3. The emergency detection inherits the tracking ID of the general vehicle detection to maintain identity tracking over subsequent frames.
 
 ### Video-Clock Stopped Vehicle Detection
-Standard algorithms detect stationary vehicles using wall-clock time (`time.time()`). This introduces false readings if inference runs faster (e.g. GPU) or slower than real-time.
-* Our system tracks the current video frame index and calculates relative time: `current_time = frame_index / fps`.
-* If a tracked vehicle moves less than `10 pixels` (Euclidean distance) over a duration of `6.0 seconds` (video-clock time), it is flagged as a stopped vehicle.
+Instead of system clock timers, we rely on video-clock metrics to support non-real-time processing speeds:
+$$\text{Relative Time} = \frac{\text{Current Frame Index}}{\text{Video FPS}}$$
+A vehicle is flagged as `STOPPED` if its bounding box center moves less than **10 pixels** over a span of **6.0 seconds** of video time.
+
+### Author
+Samyak Rawat | AI/ML Engineer | Thapar Institute of Engineering and Technology
