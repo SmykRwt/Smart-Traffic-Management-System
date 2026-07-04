@@ -22,9 +22,9 @@ See the AI Traffic Agent in action, tracking vehicles, detecting stopped obstruc
 
 * **Dual YOLO Vision Engine**: Runs a general model for standard traffic tracking alongside a specialized emergency model.
 * **Emergency Vehicle Classification**: Customized model trained to identify and prioritize **3 emergency vehicle classes**:
-  * 🚑 **Ambulance**
-  * 🚒 **Fire Truck** (`fire_truck`)
-  * 🚓 **Police Car** (`police_car`)
+  * **Ambulance**
+  * **Fire Truck**
+  * **Police Car**
 * **Duplicate Suppression & ID Inheritance**: Resolves overlap conflicts using custom IoU matching. Emergency vehicles inherit tracking IDs from the general engine, ensuring smooth telemetry tracing.
 * **Video-Clock Time Sync**: Stopped-vehicle timers use video frame rates instead of system wall clocks, maintaining accuracy regardless of processing speeds.
 * **Real-time Event Rules Engine**: Automatically triggers warnings (`HIGH`, `MEDIUM`, `INFO`) based on congestion, stationary vehicles, or emergency dispatch events.
