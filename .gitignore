@@ -16,20 +16,12 @@ env/
 # Streamlit
 .streamlit/secrets.toml
 
-# Outputs
-outputs/
-*.mp4
-*.avi
-
 # Logs
 *.log
 
 # Database
 *.db
 *.sqlite3
-
-# Models (optional - see below)
-# models/*.pt
 
 # OS
 .DS_Store
