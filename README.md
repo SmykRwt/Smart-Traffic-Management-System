@@ -10,7 +10,7 @@ An intelligent, computer-vision powered platform for real-time traffic monitorin
 See the AI Traffic Agent in action, tracking vehicles, detecting stopped obstructions, and alerting the control center.
 
 ### 📸 Live Detection Frame
-![Traffic Detection Output](data\Output\Screenshot 2026-07-04 185917.png)
+![Traffic Detection Output](data/Output/Screenshot%202026-07-04%20185917.png)
 ![Traffic Detection Output](data/Output/result.jpg)
 
 ---

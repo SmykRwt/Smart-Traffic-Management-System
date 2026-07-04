@@ -1,9 +1,13 @@
 import streamlit as st
 import tempfile
 import os
+import sys
 from pathlib import Path
 import pandas as pd
 import time
+
+# Ensure project root is in the Python search path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from app.detection.image_processor import ImageProcessor
 from app.detection.video_processor import VideoProcessor
