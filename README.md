@@ -110,6 +110,7 @@ python main.py
 ---
 ## 📈 Model Performance & Validation
 Below are the performance metrics and validation charts tracked during training the custom emergency vehicle classification model.
+
 ### 📊 Core Validation Metrics
 After training the model for 95 epochs, the following metrics were achieved on the validation dataset:
 |
@@ -171,6 +172,7 @@ mAP@50-95
  Bounding box localization precision across strict overlap thresholds (50% to 95%). 
 |
 <br>
+
 ### 📊 Metric Graphs & Performance Metrics
 #### 1. Confusion Matrix
 The confusion matrix measures classification accuracy. It compares actual labels (Ambulance, Fire Truck, Police Car, Background) against model predictions, highlighting true positives and false detection rates.
