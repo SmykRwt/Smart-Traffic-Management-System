@@ -111,67 +111,16 @@ python main.py
 ## 📈 Model Performance & Validation
 Below are the performance metrics and validation charts tracked during training the custom emergency vehicle classification model.
 
-### 📊 Core Validation Metrics
-After training the model for 95 epochs, the following metrics were achieved on the validation dataset:
-|
- Metric 
-|
- Value 
-|
- Description 
-|
-|
-:---
-|
-:---:
-|
-:---
-|
-|
-**
-Precision
-**
-|
-**
-93.15%
-**
-|
- Percentage of true positive emergency predictions (low false alarm rate). 
-|
-|
-**
-Recall
-**
-|
-**
-85.49%
-**
-|
- Percentage of actual emergency vehicles successfully detected. 
-|
-|
-**
-mAP@50
-**
-|
-**
-92.14%
-**
-|
- Overall model accuracy score at a standard 50% overlap threshold. 
-|
-|
-**
-mAP@50-95
-**
-|
-**
-72.59%
-**
-|
- Bounding box localization precision across strict overlap thresholds (50% to 95%). 
-|
-<br>
+## 📊 Core Validation Metrics
+
+After training the model for **95 epochs**, the following metrics were achieved on the validation dataset:
+
+| Metric | Value | Description |
+|--------|:-----:|-------------|
+| **Precision** | **93.15%** | Percentage of true positive emergency predictions (low false alarm rate). |
+| **Recall** | **85.49%** | Percentage of actual emergency vehicles successfully detected. |
+| **mAP@50** | **92.14%** | Overall model accuracy score at a standard 50% IoU threshold. |
+| **mAP@50-95** | **72.59%** | Bounding box localization precision across IoU thresholds from 50% to 95%. |
 
 ### 📊 Metric Graphs & Performance Metrics
 #### 1. Confusion Matrix
